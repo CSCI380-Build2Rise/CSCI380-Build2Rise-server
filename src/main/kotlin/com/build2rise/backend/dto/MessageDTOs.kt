@@ -10,10 +10,10 @@ data class SendMessageRequest(
 data class MessageResponse(
     val id: String,
     val senderId: String,
-    val senderFirstName: String,
+    val senderFirstName: String?,
     val senderLastName: String?,
     val receiverId: String,
-    val receiverFirstName: String,
+    val receiverFirstName: String?,
     val receiverLastName: String?,
     val content: String,
     val readStatus: Boolean,
@@ -23,7 +23,7 @@ data class MessageResponse(
 // Conversation Response (for listing all conversations)
 data class ConversationResponse(
     val userId: String,
-    val firstName: String,
+    val firstName: String?,
     val lastName: String?,
     val userType: String,
     val lastMessage: String,
@@ -39,7 +39,7 @@ data class ConversationDetailResponse(
 
 data class UserInfo(
     val userId: String,
-    val firstName: String,
+    val firstName: String?,
     val lastName: String?,
     val userType: String,
     val profileImageUrl: String?

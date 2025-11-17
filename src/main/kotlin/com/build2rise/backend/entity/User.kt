@@ -17,8 +17,8 @@ data class User(
     @Column(name = "password_hash", nullable = false)
     var passwordHash: String,
 
-    @Column(name = "first_name", nullable= false)
-    val firstName: String,
+    @Column(name = "first_name")
+    val firstName: String? = null,
 
     @Column(name = "last_name")
     val lastName: String? = null,

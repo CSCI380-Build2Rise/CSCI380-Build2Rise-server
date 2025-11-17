@@ -23,7 +23,7 @@ data class InvestorProfileRequest(
 data class UserProfileResponse(
     val userId: String,
     val email: String,
-    val firstName: String,
+    val firstName: String?,
     val lastName: String?,
     val userType: String,
     val profileImageUrl: String?,
