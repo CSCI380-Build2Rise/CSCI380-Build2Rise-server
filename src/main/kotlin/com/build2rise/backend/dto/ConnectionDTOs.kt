@@ -16,7 +16,7 @@ data class ConnectionResponse(
 
 data class ConnectionUserInfo(
     val userId: String,
-    val firstName: String,
+    val firstName: String?,
     val lastName: String?,
     val userType: String,
     val profileImageUrl: String?

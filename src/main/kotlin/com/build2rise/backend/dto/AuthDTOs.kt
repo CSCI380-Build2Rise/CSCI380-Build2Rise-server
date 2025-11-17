@@ -17,7 +17,8 @@ data class RegisterRequest(
     @field:NotBlank(message = "First name is required")
     val firstName: String,
 
-    val lastName: String? = null,
+    @field:NotBlank(message = "Last name is required")
+    val lastName: String,
 
     @field:NotBlank(message = "User type is required")
     val userType: String // "founder" or "investor"

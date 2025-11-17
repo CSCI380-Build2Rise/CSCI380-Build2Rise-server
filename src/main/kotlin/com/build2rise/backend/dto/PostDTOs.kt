@@ -16,7 +16,7 @@ data class UpdatePostRequest(
 data class PostResponse(
     val id: String,
     val userId: String,
-    val firstName: String,
+    val firstName: String?,
     val lastName: String?,
     val userType: String,
     val postDescription: String?,
