@@ -9,7 +9,7 @@ import java.util.UUID
 data class Connection(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
 
     @Column(name = "user1_id", nullable = false)
     val user1Id: UUID,

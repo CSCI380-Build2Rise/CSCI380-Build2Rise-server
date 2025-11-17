@@ -9,7 +9,7 @@ import java.util.UUID
 data class Message(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
 
     @Column(name = "sender_id", nullable = false)
     val senderId: UUID,

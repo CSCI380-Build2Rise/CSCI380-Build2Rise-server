@@ -9,7 +9,7 @@ import java.util.UUID
 data class Founder(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
 
     @Column(name = "user_id", unique = true, nullable = false)
     val userId: UUID,
