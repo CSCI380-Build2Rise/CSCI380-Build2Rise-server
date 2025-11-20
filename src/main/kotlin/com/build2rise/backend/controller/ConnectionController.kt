@@ -33,17 +33,32 @@ class ConnectionController(
         }
     }
 
+
     /**
      * Get all connections for current user
      * GET /api/connections
      */
+//    @GetMapping
+//    fun getUserConnections(authentication: Authentication): ResponseEntity<ConnectionsListResponse> {
+//        val userId = authentication.principal as String
+//        val connections = connectionService.getUserConnections(userId)
+//        return ResponseEntity.ok(connections)
+//    }
+    /**
+     * Get connections for current user with optional status filter
+     * GET /api/connections?status=accepted
+     * GET /api/connections?status=pending
+     * GET /api/connections (returns all)
+     */
     @GetMapping
-    fun getUserConnections(authentication: Authentication): ResponseEntity<ConnectionsListResponse> {
+    fun getUserConnections(
+        authentication: Authentication,
+        @RequestParam(required = false) status: String?
+    ): ResponseEntity<ConnectionsListResponse> {
         val userId = authentication.principal as String
-        val connections = connectionService.getUserConnections(userId)
+        val connections = connectionService.getUserConnections(userId, status)
         return ResponseEntity.ok(connections)
     }
-
     /**
      * Accept or reject connection
      * PUT /api/connections/{connectionId}

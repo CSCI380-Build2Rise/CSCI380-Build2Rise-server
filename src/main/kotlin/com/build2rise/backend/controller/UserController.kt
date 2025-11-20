@@ -79,4 +79,27 @@ class UserController(
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
     }
+
+    /**
+     * Search users for connections
+     * GET /api/users/search?userType=founder&industry=HealthTech&location=NY
+     */
+    @GetMapping("/search")
+    fun searchUsers(
+        authentication: Authentication,
+        @RequestParam(required = false) userType: String?,
+        @RequestParam(required = false) industry: String?,
+        @RequestParam(required = false) location: String?,
+        @RequestParam(required = false) fundingStage: String?
+    ): ResponseEntity<UserSearchResponse> {
+        val currentUserId = authentication.principal as String
+        val results = userService.searchUsers(
+            currentUserId = currentUserId,
+            userType = userType,
+            industry = industry,
+            location = location,
+            fundingStage = fundingStage
+        )
+        return ResponseEntity.ok(results)
+    }
 }

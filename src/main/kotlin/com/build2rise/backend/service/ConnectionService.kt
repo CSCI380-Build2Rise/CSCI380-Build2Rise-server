@@ -64,30 +64,136 @@ class ConnectionService(
     /**
      * Get all connections for a user
      */
-    fun getUserConnections(userId: String): ConnectionsListResponse {
+//    fun getUserConnections(userId: String): ConnectionsListResponse {
+//        val userUuid = UUID.fromString(userId)
+//
+//        val connections = connectionRepository.findAcceptedConnections(userUuid)
+//
+//        val connectionResponses = connections.map { connection ->
+//            val user1 = userRepository.findById(connection.user1Id).orElse(null)
+//            val user2 = userRepository.findById(connection.user2Id).orElse(null)
+//
+//            ConnectionResponse(
+//                id = connection.id.toString(),
+//                user1 = ConnectionUserInfo(
+//                    userId = connection.user1Id.toString(),
+//                    firstName = user1?.firstName,
+//                    lastName = user1?.lastName,
+//                    userType = user1?.userType ?: "unknown",
+//                    profileImageUrl = user1?.profileImageUrl
+//                ),
+//                user2 = ConnectionUserInfo(
+//                    userId = connection.user2Id.toString(),
+//                    firstName = user2?.firstName,
+//                    lastName = user2?.lastName,
+//                    userType = user2?.userType ?: "unknown",
+//                    profileImageUrl = user2?.profileImageUrl
+//                ),
+//                status = connection.status,
+//                connectionDate = connection.connectionDate.toString()
+//            )
+//        }
+//
+//        return ConnectionsListResponse(
+//            connections = connectionResponses,
+//            totalCount = connectionResponses.size
+//        )
+//    }
+    /**
+     * Get connections for a user with optional status filter
+     */
+//    fun getUserConnections(userId: String, status: String? = null): ConnectionsListResponse {
+//        val userUuid = UUID.fromString(userId)
+//
+//        val connections = when (status) {
+//            "accepted" -> connectionRepository.findAcceptedConnections(userUuid)
+//            "pending" -> connectionRepository.findPendingConnections(userUuid)
+//                .filter { it.user2Id == userUuid } // Only show requests where user is receiver
+//            else -> {
+//                // Return all connections (accepted + pending where user is receiver)
+//                val accepted = connectionRepository.findAcceptedConnections(userUuid)
+//                val pending = connectionRepository.findPendingConnections(userUuid)
+//                    .filter { it.user2Id == userUuid }
+//                accepted + pending
+//            }
+//        }
+//
+//        val connectionResponses = connections.map { connection ->
+//            val user1 = userRepository.findById(connection.user1Id).orElse(null)
+//            val user2 = userRepository.findById(connection.user2Id).orElse(null)
+//
+//            ConnectionResponse(
+//                id = connection.id.toString(),
+//                user1 = ConnectionUserInfo(
+//                    userId = connection.user1Id.toString(),
+//                    firstName = user1?.firstName,
+//                    lastName = user1?.lastName,
+//                    userType = user1?.userType ?: "unknown",
+//                    profileImageUrl = user1?.profileImageUrl
+//                ),
+//                user2 = ConnectionUserInfo(
+//                    userId = connection.user2Id.toString(),
+//                    firstName = user2?.firstName,
+//                    lastName = user2?.lastName,
+//                    userType = user2?.userType ?: "unknown",
+//                    profileImageUrl = user2?.profileImageUrl
+//                ),
+//                status = connection.status,
+//                connectionDate = connection.connectionDate.toString()
+//            )
+//        }
+//
+//        return ConnectionsListResponse(
+//            connections = connectionResponses,
+//            totalCount = connectionResponses.size
+//        )
+//    }
+
+    /**
+     * Get all connections for a user
+     */
+    fun getUserConnections(userId: String, status: String? = null): ConnectionsListResponse {
         val userUuid = UUID.fromString(userId)
 
-        val connections = connectionRepository.findAcceptedConnections(userUuid)
+        val connections = when (status) {
+            "accepted" -> connectionRepository.findAcceptedConnections(userUuid)
+            "pending" -> connectionRepository.findPendingConnections(userUuid)
+                .filter { it.user2Id == userUuid } // Only show requests where user is receiver
+            else -> {
+                // Return all connections (accepted + pending where user is receiver)
+                val accepted = connectionRepository.findAcceptedConnections(userUuid)
+                val pending = connectionRepository.findPendingConnections(userUuid)
+                    .filter { it.user2Id == userUuid }
+                accepted + pending
+            }
+        }
 
         val connectionResponses = connections.map { connection ->
-            val user1 = userRepository.findById(connection.user1Id).orElse(null)
-            val user2 = userRepository.findById(connection.user2Id).orElse(null)
+            // Determine which user is the OTHER user (not current user)
+            val otherUserId = if (connection.user1Id == userUuid) {
+                connection.user2Id
+            } else {
+                connection.user1Id
+            }
+
+            // Get the other user's details
+            val otherUser = userRepository.findById(otherUserId).orElse(null)
 
             ConnectionResponse(
                 id = connection.id.toString(),
                 user1 = ConnectionUserInfo(
-                    userId = connection.user1Id.toString(),
-                    firstName = user1?.firstName,
-                    lastName = user1?.lastName,
-                    userType = user1?.userType ?: "unknown",
-                    profileImageUrl = user1?.profileImageUrl
+                    userId = otherUserId.toString(),  // ← Only return OTHER user
+                    firstName = otherUser?.firstName,
+                    lastName = otherUser?.lastName,
+                    userType = otherUser?.userType ?: "unknown",
+                    profileImageUrl = otherUser?.profileImageUrl
                 ),
-                user2 = ConnectionUserInfo(
-                    userId = connection.user2Id.toString(),
-                    firstName = user2?.firstName,
-                    lastName = user2?.lastName,
-                    userType = user2?.userType ?: "unknown",
-                    profileImageUrl = user2?.profileImageUrl
+                user2 = ConnectionUserInfo(  // ← Keep for backwards compatibility but not used
+                    userId = userUuid.toString(),
+                    firstName = null,
+                    lastName = null,
+                    userType = "unknown",
+                    profileImageUrl = null
                 ),
                 status = connection.status,
                 connectionDate = connection.connectionDate.toString()
@@ -156,4 +262,6 @@ class ConnectionService(
             connectionDate = savedConnection.connectionDate.toString()
         )
     }
+
+
 }
