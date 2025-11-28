@@ -7,12 +7,18 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import com.build2rise.backend.service.PostInteractionService
+import java.util.UUID
+import com.build2rise.backend.dto.PostInteractionResponse
+import com.build2rise.backend.dto.AddCommentRequest
+import com.build2rise.backend.dto.CommentDto
 
 @RestController
 @RequestMapping("/api/posts")
 @CrossOrigin(origins = ["*"])
 class PostController(
-    private val postService: PostService
+    private val postService: PostService,
+    private val postInteractionService: PostInteractionService
 ) {
 
     /**
@@ -85,4 +91,51 @@ class PostController(
             ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
     }
+    @PostMapping("/{postId}/like")
+    fun toggleLike(
+        @PathVariable postId: UUID,
+        authentication: Authentication
+    ): PostInteractionResponse {
+        // principal is already a String userId in your createPost endpoint
+        val userId = UUID.fromString(authentication.principal as String)
+        return postInteractionService.toggleLike(postId, userId)
+    }
+
+    @PostMapping("/{postId}/comments")
+    fun addComment(
+        @PathVariable postId: UUID,
+        authentication: Authentication,
+        @RequestBody request: AddCommentRequest    // now only needs content
+    ): CommentDto {
+        val userId = UUID.fromString(authentication.principal as String)
+        return postInteractionService.addComment(postId, userId, request.content)
+    }
+    @GetMapping("/{postId}/comments")
+    fun getComments(
+        @PathVariable postId: UUID
+    ): List<CommentDto> {
+        return postInteractionService.getComments(postId)
+    }
+    @PostMapping("/{postId}/share")
+    fun sharePost(
+        @PathVariable postId: UUID,
+        authentication: Authentication,
+    ): PostInteractionResponse {
+        val userId = UUID.fromString(authentication.principal as String)
+        return postInteractionService.recordShare(postId, userId)
+    }
+    @GetMapping("/{postId}/interactions")
+    fun getPostInteractions(
+        @PathVariable postId: UUID,
+        authentication: Authentication
+    ): PostInteractionResponse {
+        val userId = UUID.fromString(authentication.principal as String)
+        return postInteractionService.getInteractionStatus(postId, userId)
+    }
+
+
+
+
+
+
 }

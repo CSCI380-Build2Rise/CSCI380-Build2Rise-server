@@ -27,5 +27,8 @@ data class Message(
     val timestamp: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "shared_post_id")
+    val sharedPostId: UUID? = null
 )

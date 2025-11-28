@@ -1,9 +1,12 @@
 package com.build2rise.backend.dto
 
+import java.util.UUID
+
 // Send Message Request
 data class SendMessageRequest(
     val receiverId: String,
-    val content: String
+    val content: String,
+    val sharedPostId: UUID? = null
 )
 
 // Message Response
@@ -17,7 +20,8 @@ data class MessageResponse(
     val receiverLastName: String?,
     val content: String,
     val readStatus: Boolean,
-    val timestamp: String
+    val timestamp: String,
+    val sharedPostId: String? = null
 )
 
 // Conversation Response (for listing all conversations)
@@ -44,3 +48,5 @@ data class UserInfo(
     val userType: String,
     val profileImageUrl: String?
 )
+
+

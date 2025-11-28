@@ -31,11 +31,18 @@ class MessageService(
             IllegalArgumentException("Receiver not found")
         }
 
+        // Convert optional shared post id from the request
+        // sharedPostId is already a UUID? in the request
+        val sharedPostUuid = request.sharedPostId
+
+
         // Create message
         val message = Message(
             senderId = senderUuid,
             receiverId = receiverUuid,
-            content = request.content
+            content = request.content,
+            sharedPostId = sharedPostUuid
+
         )
 
         val savedMessage = messageRepository.save(message)
@@ -50,16 +57,23 @@ class MessageService(
             receiverLastName = receiver.lastName,
             content = savedMessage.content,
             readStatus = savedMessage.readStatus,
-            timestamp = savedMessage.timestamp.toString()
+            timestamp = savedMessage.timestamp.toString(),
+            sharedPostId = savedMessage.sharedPostId?.toString()
         )
     }
 
     /**
      * Get conversation between two users
      */
-    fun getConversation(user1Id: String, user2Id: String): ConversationDetailResponse {
+    @Transactional
+        fun getConversation(user1Id: String, user2Id: String): ConversationDetailResponse {
         val user1Uuid = UUID.fromString(user1Id)
         val user2Uuid = UUID.fromString(user2Id)
+
+        messageRepository.markMessagesAsRead(
+            senderId = user2Uuid,
+            receiverId = user1Uuid
+        )
 
         val otherUser = userRepository.findById(user2Uuid).orElseThrow {
             IllegalArgumentException("User not found")
@@ -81,7 +95,8 @@ class MessageService(
                 receiverLastName = receiver?.lastName,
                 content = message.content,
                 readStatus = message.readStatus,
-                timestamp = message.timestamp.toString()
+                timestamp = message.timestamp.toString(),
+                sharedPostId = message.sharedPostId?.toString()
             )
         }
 
@@ -124,6 +139,12 @@ class MessageService(
         return conversationMap.map { (otherUserId, lastMessage) ->
             val otherUser = userRepository.findById(otherUserId).orElse(null)
 
+            // 🔥 how many messages did THIS person send to ME that I haven't read?
+            val unreadCount = messageRepository.countUnreadMessages(
+                senderId = otherUserId,
+                receiverId = userUuid
+            ).toInt()
+
             ConversationResponse(
                 userId = otherUserId.toString(),
                 firstName = otherUser?.firstName,
@@ -131,7 +152,7 @@ class MessageService(
                 userType = otherUser?.userType ?: "unknown",
                 lastMessage = lastMessage.content,
                 lastMessageTime = lastMessage.timestamp.toString(),
-                unreadCount = 0 // TODO: Implement unread count
+                unreadCount = unreadCount
             )
         }
     }

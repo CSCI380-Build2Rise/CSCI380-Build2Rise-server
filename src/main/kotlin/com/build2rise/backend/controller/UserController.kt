@@ -102,4 +102,22 @@ class UserController(
         )
         return ResponseEntity.ok(results)
     }
+
+    /**
+     * Search users by text for messaging / sharing posts
+     * GET /api/users/search-messages?q=ang
+     */
+    @GetMapping("/search-messages")
+    fun searchUsersForMessages(
+        authentication: Authentication,
+        @RequestParam("q") query: String
+    ): ResponseEntity<List<UserInfo>> {
+        val currentUserId = authentication.principal as String
+        val results = userService.searchUsersForMessages(
+            currentUserId = currentUserId,
+            query = query
+        )
+        return ResponseEntity.ok(results)
+    }
+
 }

@@ -284,4 +284,27 @@ class UserService(
             totalCount = userResults.size
         )
     }
+    fun searchUsersForMessages(
+        currentUserId: String,
+        query: String
+    ): List<UserInfo> {
+        if (query.isBlank()) return emptyList()
+
+        val currentUserUuid = UUID.fromString(currentUserId)
+
+        val users = userRepository.searchUsers(query)
+
+        return users
+            .filter { it.id != currentUserUuid }
+            .map { user ->
+                UserInfo(
+                    userId = user.id.toString(),
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    userType = user.userType,
+                    profileImageUrl = user.profileImageUrl
+                )
+            }
+    }
+
 }

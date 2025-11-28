@@ -27,5 +27,14 @@ data class Post(
     val postingDate: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "like_count")
+    var likeCount: Int = 0,
+
+    @Column(name = "comment_count")
+    var commentCount: Int = 0,
+
+    @Column(name = "share_count")
+    var shareCount: Int = 0,
 )

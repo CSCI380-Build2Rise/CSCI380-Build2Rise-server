@@ -1,12 +1,14 @@
 package com.build2rise.backend
-
+import com.build2rise.backend.security.JwtProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import javax.sql.DataSource
 
 @SpringBootApplication
+@EnableConfigurationProperties(JwtProperties::class)
 class Build2riseBackendApplication{
 	@Bean
 	fun testDatabaseConnection(dataSource: DataSource) = CommandLineRunner {
