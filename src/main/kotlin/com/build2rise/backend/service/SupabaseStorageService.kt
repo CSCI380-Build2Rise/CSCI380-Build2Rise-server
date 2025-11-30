@@ -21,37 +21,27 @@ class SupabaseStorageService(
      * Returns the public URL of the uploaded file
      */
     fun uploadFile(file: MultipartFile, userId: UUID): String {
-        println("📤 Starting file upload...")
-        println("📤 User ID: $userId")
 
         // Validate file
         if (file.isEmpty) {
             throw IllegalArgumentException("File cannot be empty")
         }
-        println("✅ File is not empty")
 
         // Validate file type
         val contentType = file.contentType ?: throw IllegalArgumentException("Unknown file type")
-        println("📤 Content type: $contentType")
         if (!isValidMediaType(contentType)) {
             throw IllegalArgumentException("Invalid file type. Only images and videos are allowed.")
         }
-        println("✅ File type is valid")
 
         // Generate unique filename
         val extension = getFileExtension(file.originalFilename ?: "file")
         val fileName = "${userId}_${System.currentTimeMillis()}$extension"
         val filePath = "posts/$fileName"
 
-        println("📤 File path: $filePath")
-        println("📤 Supabase URL: $supabaseUrl")
-        println("📤 Bucket: $bucketName")
-        println("📤 Has API key: ${supabaseKey.isNotEmpty()}")
 
         try {
             // Prepare request body
             val requestBody = file.bytes.toRequestBody(contentType.toMediaType())
-            println("✅ Request body prepared")
 
             // Build request
             val request = Request.Builder()
@@ -60,7 +50,6 @@ class SupabaseStorageService(
                 .header("Content-Type", contentType)
                 .post(requestBody)
                 .build()
-            println("✅ Request built")
 
             // Execute upload
             client.newCall(request).execute().use { response ->
@@ -68,7 +57,6 @@ class SupabaseStorageService(
                     val errorBody = response.body?.string() ?: "Unknown error"
                     throw RuntimeException("Upload failed: $errorBody")
                 }
-                println("✅ Upload successful!")
             }
 
             // Return public URL

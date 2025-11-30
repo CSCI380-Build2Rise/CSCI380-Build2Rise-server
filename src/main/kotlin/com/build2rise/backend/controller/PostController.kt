@@ -53,28 +53,15 @@ class PostController(
         @RequestParam(value = "file", required = false) file: MultipartFile?
     ): ResponseEntity<PostResponse> {
         return try {
-            println("🔹 Upload request received")
-            println("🔹 Description: $description")
-            println("🔹 File present: ${file != null}")
-            println("🔹 File empty: ${file?.isEmpty}")
-            println("🔹 File name: ${file?.originalFilename}")
-            println("🔹 File size: ${file?.size} bytes")
-            println("🔹 Content type: ${file?.contentType}")
 
             val userId = authentication.principal as String
-            println("🔹 User ID: $userId")
 
             val post = postService.createPostWithMedia(userId, description, file)
-            println("✅ Post created successfully: ${post.id}")
 
             ResponseEntity.status(HttpStatus.CREATED).body(post)
         } catch (e: IllegalArgumentException) {
-            println("❌ IllegalArgumentException: ${e.message}")
-            e.printStackTrace()
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         } catch (e: Exception) {
-            println("❌ Exception: ${e.message}")
-            e.printStackTrace()
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
     }
