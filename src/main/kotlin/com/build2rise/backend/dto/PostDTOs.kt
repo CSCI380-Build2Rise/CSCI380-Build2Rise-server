@@ -31,3 +31,9 @@ data class FeedResponse(
     val posts: List<PostResponse>,
     val totalCount: Int
 )
+
+// For multipart upload (used with @RequestParam)
+data class CreatePostWithMediaRequest(
+    val postDescription: String?,
+    val postType: String = "text" // Will be automatically set based on file type
+)
