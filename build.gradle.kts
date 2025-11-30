@@ -45,6 +45,11 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.12.3")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+	// For file upload handling
+	implementation("commons-io:commons-io:2.11.0")
+
+	// For HTTP requests to Supabase Storage
+	implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
 
 kotlin {

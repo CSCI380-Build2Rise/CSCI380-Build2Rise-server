@@ -6,12 +6,14 @@ import com.build2rise.backend.repository.PostRepository
 import com.build2rise.backend.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @Service
 class PostService(
     private val postRepository: PostRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val supabaseStorageService: SupabaseStorageService
 ) {
 
     /**
@@ -32,6 +34,62 @@ class PostService(
             postDescription = request.postDescription,
             postType = request.postType,
             mediaUrl = request.mediaUrl
+        )
+
+        val savedPost = postRepository.save(post)
+
+        return PostResponse(
+            id = savedPost.id.toString(),
+            userId = savedPost.userId.toString(),
+            firstName = user.firstName ?: "",
+            lastName = user.lastName,
+            userType = user.userType,
+            postDescription = savedPost.postDescription,
+            postType = savedPost.postType,
+            mediaUrl = savedPost.mediaUrl,
+            postingDate = savedPost.postingDate.toString(),
+            createdAt = savedPost.createdAt.toString()
+        )
+    }
+
+
+    /**
+     * Create a new post with media file
+     */
+    @Transactional
+    fun createPostWithMedia(
+        userId: String,
+        description: String?,
+        file: MultipartFile?
+    ): PostResponse {
+        val userUuid = UUID.fromString(userId)
+
+        // Verify user exists
+        val user = userRepository.findById(userUuid).orElseThrow {
+            IllegalArgumentException("User not found")
+        }
+
+        var mediaUrl: String? = null
+        var postType = "text"
+
+        // Upload file if provided
+        if (file != null && !file.isEmpty) {
+            mediaUrl = supabaseStorageService.uploadFile(file, userUuid)
+
+            // Determine post type from file content type
+            postType = when {
+                file.contentType?.startsWith("image/") == true -> "image"
+                file.contentType?.startsWith("video/") == true -> "video"
+                else -> "text"
+            }
+        }
+
+        // Create post
+        val post = Post(
+            userId = userUuid,
+            postDescription = description,
+            postType = postType,
+            mediaUrl = mediaUrl
         )
 
         val savedPost = postRepository.save(post)
