@@ -48,7 +48,11 @@ class PostService(
             postType = savedPost.postType,
             mediaUrl = savedPost.mediaUrl,
             postingDate = savedPost.postingDate.toString(),
-            createdAt = savedPost.createdAt.toString()
+            createdAt = savedPost.createdAt.toString(),
+            likeCount = savedPost.likeCount,
+            commentCount = savedPost.commentCount,
+            shareCount = savedPost.shareCount
+
         )
     }
 
@@ -104,7 +108,10 @@ class PostService(
             postType = savedPost.postType,
             mediaUrl = savedPost.mediaUrl,
             postingDate = savedPost.postingDate.toString(),
-            createdAt = savedPost.createdAt.toString()
+            createdAt = savedPost.createdAt.toString(),
+            likeCount = savedPost.likeCount,
+            commentCount = savedPost.commentCount,
+            shareCount = savedPost.shareCount
         )
     }
 
@@ -127,7 +134,10 @@ class PostService(
                 postType = post.postType,
                 mediaUrl = post.mediaUrl,
                 postingDate = post.postingDate.toString(),
-                createdAt = post.createdAt.toString()
+                createdAt = post.createdAt.toString(),
+                likeCount = post.likeCount,
+                commentCount = post.commentCount,
+                shareCount = post.shareCount
             )
         }
 
@@ -157,7 +167,10 @@ class PostService(
                 postType = post.postType,
                 mediaUrl = post.mediaUrl,
                 postingDate = post.postingDate.toString(),
-                createdAt = post.createdAt.toString()
+                createdAt = post.createdAt.toString(),
+                likeCount = post.likeCount,
+                commentCount = post.commentCount,
+                shareCount = post.shareCount
             )
         }
 
@@ -189,7 +202,10 @@ class PostService(
             postType = post.postType,
             mediaUrl = post.mediaUrl,
             postingDate = post.postingDate.toString(),
-            createdAt = post.createdAt.toString()
+            createdAt = post.createdAt.toString(),
+            likeCount = post.likeCount,
+            commentCount = post.commentCount,
+            shareCount = post.shareCount
         )
     }
 }

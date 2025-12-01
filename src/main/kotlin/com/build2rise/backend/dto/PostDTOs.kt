@@ -23,7 +23,10 @@ data class PostResponse(
     val postType: String,
     val mediaUrl: String?,
     val postingDate: String,
-    val createdAt: String
+    val createdAt: String,
+    val likeCount: Int = 0,
+    val commentCount: Int = 0,
+    val shareCount: Int = 0
 )
 
 // Feed Response (list of posts)
