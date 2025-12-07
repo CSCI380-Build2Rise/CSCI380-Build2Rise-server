@@ -22,4 +22,5 @@ interface ConnectionRepository : JpaRepository<Connection, UUID> {
         AND c.status = 'pending'
     """)
     fun findPendingConnections(userId: UUID): List<Connection>
+    fun findByUser1IdOrUser2Id(user1Id: UUID, user2Id: UUID): List<Connection>
 }
