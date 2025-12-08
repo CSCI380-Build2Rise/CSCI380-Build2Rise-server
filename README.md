@@ -142,6 +142,8 @@ Recommended investors should align with the founder’s industry
 Funding stage Preferences should match (Seed, Series A, etc.)
 
 Geographic or sector preferences should influence recommendations.
+<img width="347" height="772" alt="image" src="https://github.com/user-attachments/assets/51f2ba33-25ed-4370-b6ae-326a0c58896b" />
+
 
 ## Test Case 2: AI Smart Match - Investor to Founder
 Description: This test checks if the AI Smart Match feature correctly analyzes an investor’s preferences and displays suitable founder’s profiles.
