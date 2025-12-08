@@ -50,6 +50,10 @@ dependencies {
 
 	// For HTTP requests to Supabase Storage
 	implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+	// Add these for Gemini API calls
+	implementation("com.squareup.okhttp3:okhttp:4.12.0")
+	implementation("com.google.code.gson:gson:2.10.1")
 }
 
 kotlin {

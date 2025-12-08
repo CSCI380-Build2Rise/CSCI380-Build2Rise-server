@@ -32,6 +32,7 @@ class SecurityConfig(
                     // Public endpoints (no authentication required)
                     .requestMatchers(
                         "/api/auth/**",
+                        "/api/test/**",
                         "/error"
                     ).permitAll()
 
