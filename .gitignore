@@ -41,8 +41,8 @@ out/
 
 ### Application Properties ###
 # Don't commit database passwords!
-src/main/resources/application.properties
-src/main/resources/application-*.properties
+# Keep base application.properties but ignore local overrides
+src/main/resources/application-local.properties
 
 ### Environment Variables ###
 .env
