@@ -20,5 +20,5 @@ RUN ./gradlew clean build -x test
 # Expose the port
 EXPOSE 8080
 
-# Run the application
-CMD ["java", "-Dserver.port=${PORT}", "-jar", "build/libs/build2rise-backend-0.0.1-SNAPSHOT.jar"]
+# Run the application - JAR name matches rootProject.name
+CMD ["java", "-Dserver.port=${PORT}", "-jar", "build/libs/backend-0.0.1-SNAPSHOT.jar"]
